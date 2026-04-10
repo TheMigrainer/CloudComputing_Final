@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'node'
+    static_configs:
+      - targets: ['monitoring-node-exporter-server:9100']
+
+  # YÊU CẦU MỞ RỘNG 7: Giám sát web-frontend-server
+  - job_name: 'web'
+    static_configs:
+      - targets: ['web-frontend-server1:80', 'web-frontend-server2:80']
