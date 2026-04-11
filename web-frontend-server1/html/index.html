@@ -1,3 +1,291 @@
-<h1>MyMiniCloud – Home (Dang chay tren SERVER 1)</h1>
-<p>Day la Server Web thu 1.</p>
-<a href="/blog/">Vao xem Blog ca nhan</a>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- ✏️ CHỈNH: Tiêu đề tab trình duyệt -->
+  <title>MyMiniCloud - SERVER 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --night:      #06101e;
+      --border:     rgba(14,165,233,0.2);
+      --border-hi:  rgba(14,165,233,0.5);
+      --text:       #e0f2fe;
+      --muted:      #7dd3fc;
+      --accent:     #38bdf8;
+      --green:      #22d3a0;
+      --green-dim:  rgba(34,211,160,0.13);
+      --green-bd:   rgba(34,211,160,0.28);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--night);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ═══ BACKGROUND ═══ */
+    .bg {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 0%,   #082d4a 0%, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 10% 80%,  #041e30 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 90% 70%,  #041e30 0%, transparent 60%),
+        linear-gradient(180deg, #050d1a 0%, #06101e 100%);
+    }
+    .bg::after {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at  8% 12%, rgba(255,255,255,.5)  0%, transparent 100%),
+        radial-gradient(1px 1px at 88% 10%, rgba(255,255,255,.4)  0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 55% 50%, rgba(255,255,255,.55) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 78%, rgba(255,255,255,.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 72% 85%, rgba(255,255,255,.4)  0%, transparent 100%),
+        radial-gradient(1px 1px at 18% 55%, rgba(255,255,255,.3)  0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 92% 42%, rgba(255,255,255,.45) 0%, transparent 100%),
+        radial-gradient(1px 1px at 45% 22%, rgba(255,255,255,.25) 0%, transparent 100%),
+        radial-gradient(1px 1px at 63% 68%, rgba(255,255,255,.3)  0%, transparent 100%);
+    }
+
+    /* floating glow blobs */
+    .clouds { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .cloud  { position: absolute; border-radius: 50%; background: rgba(14,165,233,0.05); filter: blur(70px); animation: drift linear infinite; }
+    .cloud:nth-child(1) { width: 800px; height: 240px; top:  5%; left: -40%; animation-duration: 50s; }
+    .cloud:nth-child(2) { width: 500px; height: 160px; top: 55%; left: -25%; animation-duration: 65s; animation-delay: -20s; opacity: .65; }
+    .cloud:nth-child(3) { width: 600px; height: 190px; top: 75%; left: -30%; animation-duration: 80s; animation-delay: -38s; opacity: .45; }
+    @keyframes drift { from { transform: translateX(0); } to { transform: translateX(148vw); } }
+
+    /* ═══ TOPBAR ═══ */
+    .topbar {
+      position: relative; z-index: 10;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 52px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,16,30,0.8);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+      color: var(--accent); letter-spacing: .04em; text-decoration: none;
+    }
+    .logo svg { width: 22px; height: 22px; }
+    .nav-pills { display: flex; gap: 4px; }
+    .nav-pill {
+      font-size: 12.5px; color: var(--muted);
+      padding: 5px 16px; border: 1px solid transparent;
+      border-radius: 999px; text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .nav-pill:hover, .nav-pill.active { border-color: var(--border-hi); color: var(--accent); }
+    /* ✏️ CHỈNH: nhãn góc phải topbar */
+    .topbar-tag { font-size: 11px; color: rgba(125,211,252,.35); letter-spacing: .08em; text-transform: uppercase; }
+
+    /* ═══ HERO — full viewport, centered ═══ */
+    .hero {
+      position: relative; z-index: 1;
+      height: calc(100vh - 56px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 0 48px;
+      gap: 0;
+    }
+
+    /* server icon */
+    .server-icon {
+      width: 80px; height: 80px;
+      margin-bottom: 32px;
+      animation: float 5s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);} }
+
+    /* status badge */
+    .server-status {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--green-dim); border: 1px solid var(--green-bd);
+      border-radius: 999px; padding: 5px 20px;
+      font-size: 11px; color: var(--green);
+      letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 8px var(--green);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);} }
+
+    /* ✏️ CHỈNH: Tiêu đề chính */
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3.2rem, 5.5vw, 5.8rem);
+      font-weight: 800; line-height: 1.0;
+      letter-spacing: -.03em;
+      background: linear-gradient(130deg, #e0f2fe 0%, #38bdf8 45%, #0369a1 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 20px;
+    }
+
+    /* ✏️ CHỈNH: Mô tả */
+    .subtitle {
+      font-size: 1rem; font-weight: 300;
+      color: var(--muted); line-height: 1.8;
+      max-width: 440px; margin-bottom: 40px;
+    }
+
+    /* ✏️ CHỈNH: href và text nút CTA */
+    .cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(14,165,233,0.12);
+      border: 1px solid var(--border-hi);
+      border-radius: 14px;
+      padding: 14px 28px;
+      text-decoration: none; color: var(--accent);
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem; font-weight: 600; letter-spacing: .02em;
+      transition: background .2s, border-color .2s, transform .18s;
+      margin-bottom: 52px;
+    }
+    .cta:hover { background: rgba(14,165,233,0.22); border-color: var(--accent); transform: translateY(-2px); }
+    .cta-arrow { font-size: 17px; transition: transform .18s; }
+    .cta:hover .cta-arrow { transform: translateX(5px); }
+
+    /* divider line */
+    .divider {
+      width: 480px; max-width: 90vw; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin-bottom: 28px;
+    }
+
+    /* meta info row */
+    .meta {
+      display: flex; align-items: center; gap: 32px;
+    }
+    .meta-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .meta-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: rgba(125,211,252,.4); }
+    .meta-val   { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 600; color: var(--text); }
+    .meta-val.green  { color: var(--green); }
+    .meta-val.accent { color: var(--accent); }
+    .meta-sep { width: 1px; height: 28px; background: var(--border); }
+
+    /* footer */
+    .page-footer {
+      position: absolute; bottom: 24px; left: 0; right: 0;
+      text-align: center;
+      font-size: 10.5px; letter-spacing: .06em;
+      color: rgba(125,211,252,.2);
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="clouds">
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+</div>
+
+<!-- ╔════════════════════════════════════════╗
+     ║  TOPBAR                               ║
+     ╚════════════════════════════════════════╝ -->
+<nav class="topbar">
+
+  <!-- ✏️ CHỈNH: Tên logo + href trang chủ -->
+  <a class="logo" href="/">
+    <svg viewBox="0 0 22 22" fill="none">
+      <path d="M17 13.5H5a4 4 0 1 1 1.7-7.63A5.5 5.5 0 1 1 16.4 11H17a2.5 2.5 0 0 1 0 5Z" fill="#38bdf8" fill-opacity=".9"/>
+    </svg>
+    CloudComputing
+  </a>
+
+  <!-- ✏️ CHỈNH: Các tab điều hướng -->
+  <div class="nav-pills">
+    <a href="/" class="nav-pill active">Trang chủ</a>
+    <!-- <a href="/blog/" class="nav-pill">Blog</a>
+    <a href="#" class="nav-pill">Tài liệu</a> -->
+  </div>
+
+  <!-- ✏️ CHỈNH: Nhãn góc phải -->
+  <span class="topbar-tag">Điện Toán Đám Mây · 2025-2026</span>
+
+</nav>
+
+<!-- ╔════════════════════════════════════════════╗
+     ║  HERO — toàn màn hình, căn giữa           ║
+     ╚════════════════════════════════════════════╝ -->
+<main class="hero">
+
+  <!-- Icon server SVG -->
+  <svg class="server-icon" viewBox="0 0 80 80" fill="none">
+    <rect x="10" y="14" width="60" height="16" rx="5" fill="#38bdf8" fill-opacity=".16" stroke="#38bdf8" stroke-opacity=".4" stroke-width="1"/>
+    <rect x="10" y="34" width="60" height="16" rx="5" fill="#38bdf8" fill-opacity=".10" stroke="#38bdf8" stroke-opacity=".28" stroke-width="1"/>
+    <rect x="10" y="54" width="60" height="12" rx="5" fill="#38bdf8" fill-opacity=".06" stroke="#38bdf8" stroke-opacity=".18" stroke-width="1"/>
+    <circle cx="60" cy="22" r="3.5" fill="#22d3a0" fill-opacity=".9"/>
+    <circle cx="60" cy="42" r="3.5" fill="#38bdf8" fill-opacity=".75"/>
+    <circle cx="60" cy="60" r="2.5" fill="#38bdf8" fill-opacity=".4"/>
+    <rect x="17" y="20.5" width="22" height="2.5" rx="1.25" fill="#7dd3fc" fill-opacity=".3"/>
+    <rect x="17" y="40.5" width="28" height="2.5" rx="1.25" fill="#7dd3fc" fill-opacity=".25"/>
+    <rect x="17" y="58.5" width="16" height="2"   rx="1"    fill="#7dd3fc" fill-opacity=".18"/>
+  </svg>
+
+  <!-- Badge trạng thái -->
+  <div class="server-status">
+    <span class="status-dot"></span>
+    <!-- ✏️ CHỈNH: tên server -->
+    Đang chạy trên SERVER 1
+  </div>
+
+  <!-- ✏️ CHỈNH: Tiêu đề chính -->
+  <h1>MyMiniCloud — Home</h1>
+
+  <!-- ✏️ CHỈNH: Mô tả -->
+  <p class="subtitle">Đây là Server Web thứ nhất<br>Triển khai, vận hành và sẵn sàng phục vụ</p>
+
+  <!-- ✏️ CHỈNH: href và text nút CTA -->
+  <a class="cta" href="/blog/">
+    Vào xem Blog cá nhân
+    <span class="cta-arrow">→</span>
+  </a>
+
+  <div class="divider"></div>
+
+  <!-- Thông tin meta nhỏ bên dưới -->
+  <!-- ✏️ CHỈNH: Các giá trị .meta-val -->
+  <div class="meta">
+    <div class="meta-item">
+      <span class="meta-label">Máy chủ</span>
+      <span class="meta-val">SERVER 1</span>
+    </div>
+    <div class="meta-sep"></div>
+    <div class="meta-item">
+      <span class="meta-label">Trạng thái</span>
+      <span class="meta-val green">Online</span>
+    </div>
+    <div class="meta-sep"></div>
+    <div class="meta-item">
+      <span class="meta-label">Web server</span>
+      <span class="meta-val accent">Nginx 1.25</span>
+    </div>
+    <div class="meta-sep"></div>
+    <div class="meta-item">
+      <span class="meta-label">Uptime</span>
+      <span class="meta-val">99.8%</span>
+    </div>
+  </div>
+
+  <!-- ✏️ CHỈNH: Khoa / năm học -->
+  <footer class="page-footer">Khoa Công nghệ Thông tin · Năm học 2025 - 2026</footer>
+
+</main>
+</body>
+</html>
