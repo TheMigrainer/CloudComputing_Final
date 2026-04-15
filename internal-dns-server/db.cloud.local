@@ -1,13 +1,22 @@
 $TTL    604800
 @       IN      SOA     ns1.cloud.local. admin.cloud.local. (
-                         2026041001 ; Serial
+                         2026041501 ; Serial (Nên để định dạng YYYYMMDDNN)
                          604800     ; Refresh
                           86400     ; Retry
                         2419200     ; Expire
                          604800 )   ; Negative Cache TTL
 ;
 @       IN      NS      ns1.cloud.local.
+
+; Định nghĩa IP cho Name Server (ns1)
 ns1     IN      A       127.0.0.1
-@       IN      A       127.0.0.1
-www     IN      A       127.0.0.1
-api     IN      A       127.0.0.1
+
+web-frontend-server      IN      A       10.10.10.10
+app-backend              IN      A       10.10.10.20
+minio                    IN      A       10.10.10.30
+keycloak                 IN      A       10.10.10.40
+
+db.cloud.local.          IN      A       10.10.10.50
+prometheus.cloud.local.  IN      A       10.10.10.60
+grafana.cloud.local.     IN      A       10.10.10.70
+proxy.cloud.local.       IN      A       10.10.10.80
