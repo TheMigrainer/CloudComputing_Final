@@ -28,12 +28,25 @@ def student():
     try:
         with open("students.json") as f:
             data = json.load(f)
-
-        return render_template("students-json.html", students=data)
-
+        return jsonify({
+            "message": "Thành công",
+            "data": data
+        }), 200
     except Exception as e:
-        return {"error": str(e)}, 500
-    
+        return jsonify({
+            "error": str(e)}), 500
+
+# @app.get("/student")
+# def student():
+#     try:
+#         with open("students.json") as f:
+#             data = json.load(f)
+
+#         return render_template("students-json.html", students=data)
+
+#     except Exception as e:
+#         return {"error": str(e)}, 500
+        
 @app.get("/students-db")
 def students_db():
     try:
